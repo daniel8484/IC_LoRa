@@ -47,13 +47,13 @@ void LoRaData(){
   Heltec.display->setTextAlignment(TEXT_ALIGN_LEFT);
   //Seta a fonte 
   Heltec.display->setFont(ArialMT_Plain_10);// ArialMT_Plain_10, ArialMT_Plain_16, ArialMT_Plain_24. Or create one with the font tool at http://oleddisplay.squix.ch
-  //Escreve uma linha no Display. (coluna para iniciar, linha para iniciar,texto). Caso utrapasse o espaço da linha começa a escrever em cima do que já tinha
+  //'Pretende' escrever uma linha no Display. (coluna para iniciar, linha para iniciar,texto). Caso utrapasse o espaço da linha começa a escrever em cima do que já tinha
   Heltec.display->drawString(0 , 15 , "Received "+ packSize + " bytes");
-  //Escreve até o máximo passado, 128 neste caso. (coluna para iniciar, linha para iniciar, largura máxima, texto). Se o texto não couber na linha pula para as próximas linhas.
+  //'Pretende' escrever até o máximo passado, 128 neste caso. (coluna para iniciar, linha para iniciar, largura máxima, texto). Se o texto não couber na linha pula para as próximas linhas.
   Heltec.display->drawStringMaxWidth(0 , 26 , 128, packet);
-   //Escreve uma linha no Display. (coluna para iniciar, linha para iniciar,texto). Caso utrapasse o espaço da linha começa a escrever em cima do que já tinha
+   //'Pretende' escrever uma linha no Display. (coluna para iniciar, linha para iniciar,texto). Caso utrapasse o espaço da linha começa a escrever em cima do que já tinha
   Heltec.display->drawString(0, 0, rssi); 
-   //Escreve uma linha no Display. (coluna para iniciar, linha para iniciar,texto). Caso utrapasse o espaço da linha começa a escrever em cima do que já tinha 
+   //'Pretende' escrever uma linha no Display. (coluna para iniciar, linha para iniciar,texto). Caso utrapasse o espaço da linha começa a escrever em cima do que já tinha 
    //LoRa.packetSnr() pega o SNR do sinal
    Heltec.display->drawString(0, 40,"SNR: " + String(LoRa.packetSnr(), DEC));  
   //Escreve no Display os textos acima da forma definida
@@ -94,9 +94,11 @@ void setup() {
   delay(1500);
   //Limpa o Display
   Heltec.display->clear();
-  
+  //'Pretende' escrever uma linha no Display. (coluna para iniciar, linha para iniciar,texto). Caso utrapasse o espaço da linha começa a escrever em cima do que já tinha 
   Heltec.display->drawString(0, 0, "Heltec.LoRa Initial success!");
+  //'Pretende' escrever uma linha no Display. (coluna para iniciar, linha para iniciar,texto). Caso utrapasse o espaço da linha começa a escrever em cima do que já tinha 
   Heltec.display->drawString(0, 10, "Wait for incoming data...");
+  //Escreve no Display os textos acima da forma definida
   Heltec.display->display();
   delay(1000);
   //LoRa.onReceive(cbk);
