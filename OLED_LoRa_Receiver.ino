@@ -108,5 +108,6 @@ void setup() {
 void loop() {
   int packetSize = LoRa.parsePacket();
   if (packetSize) { cbk(packetSize);  }
+  //Espera 10ms
   delay(10);
 }
