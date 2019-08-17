@@ -64,4 +64,14 @@ alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
 
 Reference: https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#emphasis
 
+- [x] Finish my changes
+- [ ] Push my commits to GitHub
+- [ ] Open a pull request
+
+@octocat :+1: This PR looks great - it's ready to merge! :shipit:
+
+:metal:
+
+
+
 ![a](WhatsApp%20Image%202019-08-13%20at%2023.47.47.jpeg)
