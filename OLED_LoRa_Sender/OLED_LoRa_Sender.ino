@@ -22,6 +22,19 @@
 
 #define BAND    915E6  //you can set band here directly,e.g. 868E6,915E6
 
+//Declara localAddress que identifica o endereço deste dispositivo
+byte localAddress = 0xBB;
+//Declara destination que identifica o destino.
+byte destination = 0xFD;      
+//Declara msgCount, que será usado para guardar o tamanho da mensagem
+//byte msgCount = 0;       
+//Mensagem de saída     
+String outgoing;
+//Tempo para mandar 
+long lastSendTime = 0;  
+//Declara temporario que será usado para guardar valor temporario do tempo estimado para transmistir            
+long temporario = 0;   
+
 unsigned int counter = 0;
 String rssi = "RSSI --";
 String packSize = "--";
@@ -38,7 +51,7 @@ void setup()
 {
    //WIFI Kit series V1 not support Vext control
   Heltec.begin(true /*DisplayEnable Enable*/, true /*Heltec.Heltec.Heltec.LoRa Disable*/, true /*Serial Enable*/, true /*PABOOST Enable*/, BAND /*long BAND*/);
- 
+  Serial.println("Iniciando...");
   Heltec.display->init();
   Heltec.display->flipScreenVertically();  
   Heltec.display->setFont(ArialMT_Plain_10);
@@ -60,9 +73,23 @@ void loop()
   Heltec.display->drawString(0, 0, "Sending packet: ");
   Heltec.display->drawString(90, 0, String(counter));
   Heltec.display->display();
+  
+  outgoing = " Hello World " + String(counter,DEC);
+  //Retorna o número de milissegundos passados desde que a placa Arduino começou a executar o programa atual.
+  sendMessage(outgoing);
+ 
+  //Teste com LED
+  //digitalWrite(LED, HIGH);   // turn the LED on (HIGH is the voltage level)
+  //delay(1000);                       // wait for a second
+  //digitalWrite(LED, LOW);    // turn the LED off by making the voltage LOW
+  //delay(1000);                       // wait for a second
+}
+void sendMessage(String outgoing)
+{
+    // Manda o pacote
+    LoRa.beginPacket();
 
-  // send packet
-  LoRa.beginPacket();
+
   
 /*
  * LoRa.setTxPower(txPower,RFOUT_pin);
@@ -71,14 +98,34 @@ void loop()
  *   - RF_PACONFIG_PASELECT_PABOOST -- LoRa single output via PABOOST, maximum output 20dBm
  *   - RF_PACONFIG_PASELECT_RFO     -- LoRa single output via RFO_HF / RFO_LF, maximum output 14dBm
 */
-  LoRa.setTxPower(14,RF_PACONFIG_PASELECT_PABOOST);
-  LoRa.print("hello ");
-  LoRa.print(counter);
-  LoRa.endPacket();
 
+
+
+  //Adicionar endereço de destino
+  LoRa.write(destination);  
+  //Adicionar endereço do remetente            
+  LoRa.write(localAddress);    
+  //Adicionar o contador de bytes da mensagem         
+  LoRa.write(counter);
+  //comprimento de msg de entrada              
+  LoRa.write(outgoing.length());   
+
+  
+  //LoRa.setTxPower(14,RF_PACONFIG_PASELECT_PABOOST);
+
+
+  LoRa.print(outgoing);
+  
+  LoRa.endPacket();
+   //Tempo para mandar uma mensagem?
+  if(counter==0){
+   temporario = lastSendTime = millis();
+  }
+  else{
+  lastSendTime =  millis() - temporario; 
+  temporario = millis();
+  }
+  Serial.println("Tempo gasto " + String(lastSendTime, DEC ));
+  //Contador que aparece na mensagem, útil pra ver se todas estão chegando
   counter++;
-  digitalWrite(LED, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(1000);                       // wait for a second
-  digitalWrite(LED, LOW);    // turn the LED off by making the voltage LOW
-  delay(1000);                       // wait for a second
-}
+  }
