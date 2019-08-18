@@ -74,4 +74,4 @@ Reference: https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#emph
 
 ![a](https://thumbs.gfycat.com/DecisiveWanKouprey-max-1mb.gif)
 
-![a](WhatsApp%20Image%202019-08-13%20at%2023.47.47.jpeg)
+![a](img/WhatsApp%20Image%202019-08-13%20at%2023.47.47.jpeg)
