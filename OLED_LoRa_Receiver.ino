@@ -52,15 +52,25 @@ void LoRaData(){
   //'Pretende' escrever até o máximo passado, 128 neste caso. (coluna para iniciar, linha para iniciar, largura máxima, texto). Se o texto não couber na linha pula para as próximas linhas.
   Heltec.display->drawStringMaxWidth(0 , 26 , 128, packet);
    //'Pretende' escrever uma linha no Display. (coluna para iniciar, linha para iniciar,texto). Caso utrapasse o espaço da linha começa a escrever em cima do que já tinha
-  Heltec.display->drawString(0, 0, rssi); 
+ // Heltec.display->drawString(0, 0, rssi); 
    //'Pretende' escrever uma linha no Display. (coluna para iniciar, linha para iniciar,texto). Caso utrapasse o espaço da linha começa a escrever em cima do que já tinha 
    //LoRa.packetSnr() pega o SNR do sinal
-   Heltec.display->drawString(0, 40,"SNR: " + String(LoRa.packetSnr(), DEC));  
+   //Heltec.display->drawString(0, 40,"SNR: " + String(LoRa.packetSnr(), DEC));  
   //Escreve no Display os textos acima da forma definida
   Heltec.display->display();
 }
 
 void cbk(int packetSize) {
+  int recipient = LoRa.read();          // recipient address
+ byte sender = LoRa.read();            // sender address
+ byte incomingMsgId = LoRa.read();     // incoming msg ID
+ byte incomingLength = LoRa.read();    // incoming msg length
+ byte a = LoRa.read();    // incoming msg length
+ Serial.println("recipient " + String(recipient,DEC));
+  Serial.println("sender " + String(sender,DEC));
+  Serial.println("incomingMsgId " + String(incomingMsgId,DEC));
+  Serial.println("incomingLength " + String(incomingLength,DEC));
+  Serial.println("a " + String(a,DEC));
   //Seta um valor nulo para packet
   packet ="";
   //Seta o valor de packSize
@@ -82,6 +92,9 @@ void setup() {
   //Inicia o módulo 
   //O que seria Enable, Serial e PABOOST?
   Heltec.begin(true /*DisplayEnable Enable*/, true /*Heltec.LoRa Disable*/, true /*Serial Enable*/, true /*PABOOST Enable*/, BAND /*long BAND*/);
+
+  //Serial.println("Heltec.LoRa Duplex");
+  
   //Inicializa o display
   Heltec.display->init();
   //Mudou a orientação vertical. flip = virar.
