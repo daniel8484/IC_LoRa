@@ -28,6 +28,11 @@ String rssi = "RSSI --";
 String packSize = "--";
 //Declara packet, que vai representar o pacote.
 String packet ;
+
+
+byte localAddress = 0xBB;     // address of this device
+
+
 /*
  * Declara um método para mostrar uma imagem na tela do ESP32
  */
@@ -61,21 +66,71 @@ void LoRaData(){
 }
 
 void cbk(int packetSize) {
+  if (packetSize == 0) return;          // if there's no packet, return
+
+  
+  // read packet header bytes:
+  int recipient = LoRa.read();          // recipient address
+  byte sender = LoRa.read();            // sender address
+  byte incomingMsgId = LoRa.read();     // incoming msg ID
+  byte incomingLength = LoRa.read();    // incoming msg length
+
+
+  
   //Seta um valor nulo para packet
   packet ="";
   //Seta o valor de packSize
   //fornece a String que é a representação hexadecimal do valor de packetSize. 
   packSize = String(packetSize,DEC);
-  //Enquanto i < packetSize, temos:
-  for (int i = 0; i < packetSize; i++) { 
+  //Enquanto i < packetSize - 4. -4 Por causa dos 4 bytes lidos acima, temos:
+  for (int i = 0; i < packetSize - 4 ; i++) { 
     //Lê byte por byte e cria uma concaternação. No final terá todo o texto
     //O mesmo que packet = packet + (char) LoRa.read();
     packet += (char) LoRa.read(); 
     }
+
+
+    
+
+  //if (incomingLength != packet.length())
+  //{   // check length for error
+    //Serial.println("error: message length does not match length" + String(packet.length(), DEC));
+    // skip rest of function
+    //return;                             
+  //}
+  
+
+  // if the recipient isn't this device or broadcast,
+  //if (recipient != localAddress && recipient != 0xFF) {
+    //Serial.println("This message is not for me.");
+    // skip rest of function
+    //return;                             
+  //}
+
+
+
+  // if message is for this device, or broadcast, print details:
+  
+  //Serial.println("Received from: 0x" + String(sender, DEC));
+  //Serial.println("Sent to: 0x" + String(recipient, DEC));
+  Serial.println("Received from: 0x" + String(sender, BIN));
+  Serial.println("Sent to: 0x" + String(recipient, BIN));
+  Serial.println("Message ID: " + String(incomingMsgId));
+  Serial.println("Message length: " + String(incomingLength));
+  Serial.println("Message: " + packet);
+  Serial.println("RSSI: " + String(LoRa.packetRssi()));
+  Serial.println("Snr: " + String(LoRa.packetSnr()));
+  Serial.println();
+
+
+
+
+
+  
   //Define o valor de rssi
-  rssi = "RSSI " + String(LoRa.packetRssi(), DEC) ;
+  //rssi = "RSSI " + String(LoRa.packetRssi(), DEC) ;
   //Chama o método LoRaData()
-  LoRaData();
+  //LoRaData();
 }
 //Executa quando inicia o programa
 void setup() { 
@@ -102,7 +157,8 @@ void setup() {
   Heltec.display->display();
   delay(1000);
   //LoRa.onReceive(cbk);
-  LoRa.receive();
+  //Coloca o rádio no modo de recepção contínua
+  //LoRa.receive();
 }
 
 void loop() {
@@ -111,4 +167,3 @@ void loop() {
   //Espera 10ms
   delay(10);
 }
-//fim

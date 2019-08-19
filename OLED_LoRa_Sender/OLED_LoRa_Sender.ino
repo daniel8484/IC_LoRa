@@ -74,7 +74,7 @@ void loop()
   Heltec.display->drawString(90, 0, String(counter));
   Heltec.display->display();
   
-  outgoing = " Hello World " + String(counter,DEC);
+  outgoing = "Hello World " + String(counter,DEC);
   //Retorna o número de milissegundos passados desde que a placa Arduino começou a executar o programa atual.
   sendMessage(outgoing);
  
@@ -107,7 +107,7 @@ void sendMessage(String outgoing)
   LoRa.write(localAddress);    
   //Adicionar o contador de bytes da mensagem         
   LoRa.write(counter);
-  //comprimento de msg de entrada              
+  //Comprimento de msg de entrada              
   LoRa.write(outgoing.length());   
 
   
@@ -126,6 +126,7 @@ void sendMessage(String outgoing)
   temporario = millis();
   }
   Serial.println("Tempo gasto " + String(lastSendTime, DEC ));
+  Serial.println("mensagem" + outgoing);
   //Contador que aparece na mensagem, útil pra ver se todas estão chegando
   counter++;
   }
